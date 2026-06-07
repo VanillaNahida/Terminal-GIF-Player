@@ -219,40 +219,9 @@ public class ConsoleVT9 {
 try { [ConsoleVT9]::Enable() } catch { }
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
 
-# ============== Music ==============
+# ============== Music init ==============
 $script:mediaPlayer = $null
 $script:musicStartTime = $null
-
-if ($MusicPath -and (Test-Path $MusicPath)) {
-    try {
-        Add-Type -AssemblyName PresentationCore
-
-        $mp = New-Object System.Windows.Media.MediaPlayer
-        $musicFull = (Resolve-Path $MusicPath).Path
-        $musicUri = New-Object System.Uri($musicFull)
-        $mp.Open($musicUri)
-
-        Start-Sleep -Milliseconds 500
-        $mp.Volume = $MusicVolume
-
-        if ($MusicLoop) {
-            Register-ObjectEvent -InputObject $mp -EventName MediaEnded -SourceIdentifier "MusicLoop" -Action {
-                $Sender.Position = [TimeSpan]::Zero
-                $Sender.Play()
-            } | Out-Null
-        }
-
-        $mp.Play()
-        $script:mediaPlayer = $mp
-        $script:musicStartTime = [DateTime]::Now
-        Write-Host "Music: $MusicPath (Vol=$MusicVolume Loop=$MusicLoop)" -ForegroundColor Magenta
-    } catch {
-        Write-Host "Music error: $_" -ForegroundColor Yellow
-        $script:mediaPlayer = $null
-    }
-} elseif ($MusicPath) {
-    Write-Host "Music not found: $MusicPath" -ForegroundColor Yellow
-}
 
 # ============== Decode GIF ==============
 Add-Type -AssemblyName System.Drawing
@@ -394,6 +363,38 @@ for ($i = 0; $i -lt $frameCount; $i++) {
 $script:allPixels = $null
 [GC]::Collect()
 Write-Host ""
+
+# ============== Start Music ==============
+if ($MusicPath -and (Test-Path $MusicPath)) {
+    try {
+        Add-Type -AssemblyName PresentationCore
+
+        $mp = New-Object System.Windows.Media.MediaPlayer
+        $musicFull = (Resolve-Path $MusicPath).Path
+        $musicUri = New-Object System.Uri($musicFull)
+        $mp.Open($musicUri)
+
+        Start-Sleep -Milliseconds 500
+        $mp.Volume = $MusicVolume
+
+        if ($MusicLoop) {
+            Register-ObjectEvent -InputObject $mp -EventName MediaEnded -SourceIdentifier "MusicLoop" -Action {
+                $Sender.Position = [TimeSpan]::Zero
+                $Sender.Play()
+            } | Out-Null
+        }
+
+        $mp.Play()
+        $script:mediaPlayer = $mp
+        $script:musicStartTime = [DateTime]::Now
+        Write-Host "Music: $MusicPath (Vol=$MusicVolume Loop=$MusicLoop)" -ForegroundColor Magenta
+    } catch {
+        Write-Host "Music error: $_" -ForegroundColor Yellow
+        $script:mediaPlayer = $null
+    }
+} elseif ($MusicPath) {
+    Write-Host "Music not found: $MusicPath" -ForegroundColor Yellow
+}
 
 # ============== Resize window ==============
 try {
