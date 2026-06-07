@@ -36,7 +36,7 @@ FrameDelayMs = 40
 AlphaThreshold = 128
 
 [Window]
-Title = 我真的特别爱你~
+Title = Terminal GIF Player
 TitleSpeed = 2000
 
 [Music]
@@ -45,16 +45,11 @@ Loop = true
 Volume = 0.8
 
 [Marquee]
-; 如果检测到同名lrc文件(如bgm.lrc)，自动使用歌词同步显示
-; 没有lrc时才使用这里的滚动文字
 Speed = 160
-Lines = 喵喵喵~欢迎来到猫猫频道 | Ctrl+C 退出播放~
+Lines = Welcome! | Ctrl+C to exit~
 Color = 255,200,50
-; 歌词模式颜色(可单独设置)
 LrcColor = 100,255,200
-; 歌词显示模式: scroll=滚动 sync=同步居中
 LrcMode = sync
-; 是否将歌词同步到窗口标题 (true/false)
 LrcTitle = true
 "@ | Set-Content $ConfigPath -Encoding UTF8
     Write-Host "Generated default config: $ConfigPath" -ForegroundColor Yellow
