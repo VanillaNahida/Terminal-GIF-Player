@@ -194,7 +194,7 @@ if (-not (Test-Path $GifPath)) {
 
 # ============== Set initial title ==============
 $origTitle = $Host.UI.RawUI.WindowTitle
-$Host.UI.RawUI.WindowTitle = "正在初始化, 请稍后..."
+$Host.UI.RawUI.WindowTitle = "Initializing, please wait..."
 
 # ============== Enable VT ==============
 Add-Type -TypeDefinition @'
