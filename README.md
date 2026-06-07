@@ -12,7 +12,7 @@
 
 ---
 <p align="center">
-  <img src="image.png" alt="image">
+  <img src="assets\record.gif" alt="image">
 </p>
 
 ## ✨ 功能特性
@@ -110,6 +110,7 @@ Lines = 喵喵喵~|Ctrl+C 退出  ; 滚动文字，用 | 分隔多行
 Color = 255,200,50          ; 滚动字幕颜色（R,G,B）
 LrcColor = 100,255,200      ; 歌词颜色（R,G,B）
 LrcMode = sync              ; 歌词模式：sync=同步居中 / scroll=滚动
+LrcTitle = false            ; 是否将歌词同步到窗口标题
 ```
 
 ### 各参数详解
@@ -147,6 +148,7 @@ LrcMode = sync              ; 歌词模式：sync=同步居中 / scroll=滚动
 | `Color` | `255,200,50` | 滚动字幕 RGB 颜色 |
 | `LrcColor` | `100,255,200` | 歌词 RGB 颜色 |
 | `LrcMode` | `sync` | `sync` 居中同步显示 / `scroll` 滚动显示 |
+| `LrcTitle` | `false` | 是否将歌词同步到窗口标题（`true`/`false`） |
 
 ---
 

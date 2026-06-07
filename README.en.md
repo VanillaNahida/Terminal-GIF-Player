@@ -12,7 +12,7 @@
 
 ---
 <p align="center">
-  <img src="image.png" alt="image">
+  <img src="assets\record.gif" alt="image">
 </p>
 
 ## Features
@@ -110,6 +110,7 @@ Lines = Meow~|Ctrl+C to exit  ; Scrolling text, use | to separate multiple lines
 Color = 255,200,50          ; Marquee text color (R,G,B)
 LrcColor = 100,255,200      ; Lyric color (R,G,B)
 LrcMode = sync              ; Lyric mode: sync=centered sync / scroll=scrolling
+LrcTitle = false            ; Sync lyrics to window title
 ```
 
 ### Parameter Details
@@ -147,6 +148,7 @@ LrcMode = sync              ; Lyric mode: sync=centered sync / scroll=scrolling
 | `Color` | `255,200,50` | Marquee RGB color |
 | `LrcColor` | `100,255,200` | Lyric RGB color |
 | `LrcMode` | `sync` | `sync` = centered sync display / `scroll` = scrolling display |
+| `LrcTitle` | `false` | Sync lyrics to window title (`true`/`false`) |
 
 ---
 

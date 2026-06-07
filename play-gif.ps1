@@ -50,6 +50,7 @@ Lines = Hello! Welcome~|Ctrl+C to quit
 Color = 255,200,50
 LrcColor = 100,255,200
 LrcMode = sync
+LrcTitle = false
 "@ | Set-Content $ConfigPath -Encoding UTF8
     Write-Host "Generated default config: $ConfigPath" -ForegroundColor Yellow
 }
@@ -79,6 +80,7 @@ $MarqueeRaw     = CfgGet "Marquee" "Lines" ""
 $MarqueeColorS  = CfgGet "Marquee" "Color" "255,200,50"
 $LrcColorS      = CfgGet "Marquee" "LrcColor" "100,255,200"
 $LrcMode        = CfgGet "Marquee" "LrcMode" "sync"
+$LrcTitle       = (CfgGet "Marquee" "LrcTitle" "false") -match "^(true|1|yes)$"
 
 # Parse title lines
 $TitleLines = @($TitleRaw -split '\|' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" })
@@ -498,7 +500,7 @@ try {
             [Console]::Write($script:ansiFrames[$i])
 
             # --- Title rotation ---
-            if ($titleEnabled) {
+            if ($titleEnabled -and (-not $LrcTitle)) {
                 $now = [Environment]::TickCount
                 $elapsed = $now - $titleLastTick
                 if ($elapsed -lt 0) { $elapsed = $TitleSpeed }
@@ -518,28 +520,33 @@ try {
                     $lrcLastIdx = $curIdx
                     $lrcLastText = $curText
 
-                    if ($LrcMode -eq "sync") {
-                        # Show current line centered, next line dimmed below
-                        $line1 = Center-Text $curText $Width
-                        [Console]::Write("$ESC[$marqueeRow;1H$ESC[0;1;38;2;${lR};${lG};${lB}m$line1$ESC[0m")
+                    # Update window title with current lyric
+                    if ($LrcTitle -and $curText) {
+                        $Host.UI.RawUI.WindowTitle = $curText
+                    }
+                }
 
-                        # Next lyric line (dimmed)
-                        $nextRow = $marqueeRow + 1
-                        $nextText = ""
-                        if ($curIdx + 1 -lt $lrcData.Count) {
-                            $nextText = $lrcData[$curIdx + 1].Text
-                        }
-                        $line2 = Center-Text $nextText $Width
-                        $dimR = [Math]::Floor($lR * 0.5)
-                        $dimG = [Math]::Floor($lG * 0.5)
-                        $dimB = [Math]::Floor($lB * 0.5)
-                        [Console]::Write("$ESC[$nextRow;1H$ESC[0;38;2;${dimR};${dimG};${dimB}m$line2$ESC[0m")
+                if ($LrcMode -eq "sync") {
+                    # Show current line centered, next line dimmed below
+                    $line1 = Center-Text $curText $Width
+                    [Console]::Write("$ESC[$marqueeRow;1H$ESC[0;1;38;2;${lR};${lG};${lB}m$line1$ESC[0m")
+
+                    # Next lyric line (dimmed)
+                    $nextRow = $marqueeRow + 1
+                    $nextText = ""
+                    if ($curIdx + 1 -lt $lrcData.Count) {
+                        $nextText = $lrcData[$curIdx + 1].Text
                     }
-                    else {
-                        # scroll mode: just show centered
-                        $line1 = Center-Text $curText $Width
-                        [Console]::Write("$ESC[$marqueeRow;1H$ESC[0;38;2;${lR};${lG};${lB}m$line1$ESC[0m")
-                    }
+                    $line2 = Center-Text $nextText $Width
+                    $dimR = [Math]::Floor($lR * 0.5)
+                    $dimG = [Math]::Floor($lG * 0.5)
+                    $dimB = [Math]::Floor($lB * 0.5)
+                    [Console]::Write("$ESC[$nextRow;1H$ESC[0;38;2;${dimR};${dimG};${dimB}m$line2$ESC[0m")
+                }
+                else {
+                    # scroll mode: just show centered
+                    $line1 = Center-Text $curText $Width
+                    [Console]::Write("$ESC[$marqueeRow;1H$ESC[0;38;2;${lR};${lG};${lB}m$line1$ESC[0m")
                 }
             }
             # --- Normal marquee (no LRC) ---
