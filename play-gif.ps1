@@ -194,7 +194,7 @@ if (-not (Test-Path $GifPath)) {
 
 # ============== Set initial title ==============
 $origTitle = $Host.UI.RawUI.WindowTitle
-$Host.UI.RawUI.WindowTitle = $TitleLines[0]
+$Host.UI.RawUI.WindowTitle = "正在初始化, 请稍后..."
 
 # ============== Enable VT ==============
 Add-Type -TypeDefinition @'
@@ -467,6 +467,10 @@ Write-Host "Ready! Ctrl+C to stop." -ForegroundColor Green
 if ($useLrc) {
     Write-Host "LRC sync mode: $LrcMode" -ForegroundColor Cyan
 }
+
+# Restore title after initialization
+$Host.UI.RawUI.WindowTitle = $TitleLines[0]
+
 Start-Sleep -Milliseconds 500
 
 [Console]::Write("$ESC[?25l")
